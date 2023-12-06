@@ -20,3 +20,12 @@ Rodar o banco:
 ```shell
 docker container run --name projeto-dev-web-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e MYSQL_DATABASE=anuncios -p 3306:3306 -d mysql:latest
 ```
+
+Rodar a aplicação:
+```shell
+docker image build . -t projeto-dev-web && docker container run -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios projeto-dev-web:latest
+```
+Local:
+```text
+jdbc:mysql://localhost:3306/anuncios
+```
