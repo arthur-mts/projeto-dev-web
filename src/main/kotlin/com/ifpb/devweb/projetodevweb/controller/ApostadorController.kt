@@ -25,7 +25,8 @@ class ApostadorController(private val apostadorService: ApostadorService, privat
                     id = UUID.randomUUID(),
                     nome = nome,
                     email = email,
-                    dataDeNascimento = dataDeNascimento
+                    dataDeNascimento = dataDeNascimento,
+                    status = Apostador.Status.ATIVO,
             )
             when (apostadorService.criarApostador(entity)) {
                 is EmailJaExistenteResult -> ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário com esse email já cadastrado")
@@ -46,6 +47,15 @@ class ApostadorController(private val apostadorService: ApostadorService, privat
         return when (apostadorService.editarApostador(body.nome, body.email, id)) {
             is EditarOkResult -> ResponseEntity<Unit>(HttpStatus.OK)
             is ApostadorNaoEncontradoResult -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apostador \"$id\" não encontrado")
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    fun deleteMapping(@PathVariable("id") id: UUID): ResponseEntity<*> {
+        return when(apostadorService.deletarApostador(id)) {
+            EditarOkResult -> ResponseEntity<Unit>(HttpStatus.OK)
+            ApostadorNaoEncontradoResult -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apostador \"$id\" não encontrado")
         }
     }
 

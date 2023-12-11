@@ -1,0 +1,1 @@
+alter table apostadores add column status varchar(20) not null;

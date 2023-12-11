@@ -10,4 +10,10 @@ data class Apostador(
         val email: String?,
         @ColumnName("data_nascimento")
         val dataDeNascimento: LocalDate,
-)
+        val status: Status,
+) {
+    enum class Status {
+        ATIVO,
+        DELETADO
+    }
+}

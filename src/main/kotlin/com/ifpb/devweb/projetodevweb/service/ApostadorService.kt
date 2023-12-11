@@ -33,7 +33,7 @@ class ApostadorService(
                 }
             }
 
-            val statement = handle.createUpdate("insert into apostadores(id, nome, email, data_nascimento) values (:id, :nome, :email, :dataDeNascimento)")
+            val statement = handle.createUpdate("insert into apostadores(id, nome, email, data_nascimento, status) values (:id, :nome, :email, :dataDeNascimento, 'ATIVO')")
             statement.bindBean(apostador)
             statement.execute()
             return@withHandleUnchecked ApostadorCriadoResult
@@ -43,16 +43,28 @@ class ApostadorService(
     fun listarApostador(): ListarApostadoresResults {
         return jdbi.withHandleUnchecked { handle ->
             ListarOkResult(
-                    handle.createQuery("select * from apostadores").mapTo(Apostador::class.java).list()
+                    handle.createQuery("select * from apostadores where status <> 'DELETADO'").mapTo(Apostador::class.java).list()
             )
         }
     }
 
     fun editarApostador(nome: String, email: String, id: UUID): EditarApostadoresResults {
         return jdbi.withHandleUnchecked { handle ->
-            val statement = handle.createUpdate("update apostadores set nome = :nome, email = :email where id = :id")
+            val statement = handle.createUpdate("update apostadores set nome = :nome, email = :email where id = :id and status <> 'DELETADO'")
             statement.bind("nome", nome)
             statement.bind("email", email)
+            statement.bind("id", id)
+            if (statement.execute() > 0) {
+                EditarOkResult
+            } else {
+                ApostadorNaoEncontradoResult
+            }
+        }
+    }
+
+    fun deletarApostador(id: UUID): EditarApostadoresResults {
+        return jdbi.withHandleUnchecked { handle ->
+            val statement = handle.createUpdate("update apostadores set status = 'DELETADO' where id = :id and status <> 'DELETADO'")
             statement.bind("id", id)
             if (statement.execute() > 0) {
                 EditarOkResult
