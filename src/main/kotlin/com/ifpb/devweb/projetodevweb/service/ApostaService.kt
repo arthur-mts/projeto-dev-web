@@ -1,13 +1,10 @@
 package com.ifpb.devweb.projetodevweb.service
 
 import com.ifpb.devweb.projetodevweb.domain.Aposta
+import com.ifpb.devweb.projetodevweb.domain.Concurso
 import com.ifpb.devweb.projetodevweb.repository.ApostaRepository
 import com.ifpb.devweb.projetodevweb.results.*
-import org.jdbi.v3.core.Jdbi
-import org.jdbi.v3.core.kotlin.mapTo
-import org.jdbi.v3.core.kotlin.withHandleUnchecked
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
@@ -27,8 +24,8 @@ class ApostaService(
 
         val concurso = concursoService.encontrarConcurso(aposta.idConcurso) ?: return ApostarConcursoNaoEncontradoResult
 
-        if (concurso.numeroSorteado != null) {
-            return ApostarConcursoJaRodouResult
+        if (concurso.status != Concurso.Status.EM_ABERTO) {
+            return ApostarConcursoInvalidoResult
         }
 
         val apostasJaFeitas = apostaRepository.listarApostasPorConcurso(concurso.id)

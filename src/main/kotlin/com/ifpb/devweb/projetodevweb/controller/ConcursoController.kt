@@ -8,7 +8,6 @@ import com.ifpb.devweb.projetodevweb.results.*
 import com.ifpb.devweb.projetodevweb.service.ApostaService
 import com.ifpb.devweb.projetodevweb.service.ApostadorService
 import com.ifpb.devweb.projetodevweb.service.ConcursoService
-import jakarta.websocket.server.PathParam
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -68,7 +67,7 @@ class ConcursoController(
                         vencedor = nomeVencedor,
                 ))
             }
-            is ConcursoJaSorteadoResult -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Concurso já foi sorteado")
+            is ConcursoInvalido -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Concurso não pode ser sorteado")
         }
     }
 

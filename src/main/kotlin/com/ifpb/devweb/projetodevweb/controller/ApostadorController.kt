@@ -71,7 +71,7 @@ class ApostadorController(private val apostadorService: ApostadorService, privat
             is ApostarOkResult -> ResponseEntity.status(HttpStatus.OK).body(entity)
             is ApostarApostadorNaoEncontradoResult -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Apostador \"$idApostador\" não encontrado")
             is ApostarConcursoNaoEncontradoResult -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Concurso \"$idConcurso\" não encontrado")
-            is ApostarConcursoJaRodouResult -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Concurso \"$idConcurso\" ja rodou")
+            is ApostarConcursoInvalidoResult -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Concurso \"$idConcurso\" invalido")
             is ApostarNumeroJaEscolhido -> ResponseEntity.status(HttpStatus.FORBIDDEN).body("Número \"${body.numero}\" ja escolhido")
         }
     }

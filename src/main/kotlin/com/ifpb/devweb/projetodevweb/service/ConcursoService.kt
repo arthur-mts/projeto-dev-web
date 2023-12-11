@@ -46,8 +46,8 @@ class ConcursoService(private val jdbi: Jdbi, private val sorteioService: Sortei
     fun sortearConcurso(id: UUID): SortearConcursoResults {
 
         val concurso = encontrarConcurso(id) ?: return ConcursoNaoEncontradoResult
-        if (concurso.status == Concurso.Status.CONCLUIDO) {
-            return ConcursoJaSorteadoResult
+        if (concurso.status != Concurso.Status.EM_ABERTO) {
+            return ConcursoInvalido
         }
 
         val (idVencedor, numeroSorteado) = sorteioService.executaSorteio(id)
