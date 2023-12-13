@@ -20,21 +20,16 @@
 ## Rodar local
 Rodar o banco:
 ```shell
-docker container run --name projeto-dev-web-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e MYSQL_DATABASE=anuncios --network=host mysql:latest
+docker container run -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e MYSQL_DATABASE=anuncios --network=host mysql:latest
 ```
 
 Rodar a aplicação:
 ```shell
-docker image build . -t projeto-dev-web && docker container run -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios --network=host projeto-dev-web:latest
-```
-Local:
-```text
-jdbc:mysql://localhost:3306/anuncios
+docker image build . -t backend
+docker container run -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios --network=host backend:latesty
 ```
 
-docker container run -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios projeto-dev-web:latest
-
-## Rodar na AWS
+## Configurar o EC2 na AWS
 
 - Instalar o Docker
   - `sudo yum install docker`
@@ -45,10 +40,3 @@ docker container run -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios proj
   - `newgrp docker`
 - Fazer o git pull do projeto
 - Reiniciar a maquina
-
-```
-docker container run --name projeto-dev-web-db -d -e MYSQL_ROOT_PASSWORD=root -e MYSQL_ROOT_HOST=% -e MYSQL_DATABASE=anuncios --network=host mysql:latest
-```
-```
-docker container run -d -e DATASOURCE_URL=jdbc:mysql://localhost:3306/anuncios --network=host backend:latest
-```

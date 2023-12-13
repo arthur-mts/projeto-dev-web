@@ -14,6 +14,7 @@ class ApostaService(
         private val apostaRepository: ApostaRepository,
 ) {
 
+    fun listarApostas(status: Aposta.Status?) = apostaRepository.listarApostas(status)
     fun listarApostasPorConcurso(idConcurso: UUID) = apostaRepository.listarApostasPorConcurso(idConcurso)
     fun listarApostasPorApostador(idApostador: UUID) = apostaRepository.listarApostasPorApostador(idApostador)
 

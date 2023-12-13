@@ -57,4 +57,19 @@ class ApostaRepository(private val jdbi: Jdbi) {
             statement.execute()
         }
     }
+
+    fun listarApostas(status: Aposta.Status?): List<Aposta> {
+        return jdbi.withHandleUnchecked { handle ->
+            var query = "select * from apostas"
+
+            if (status != null) {
+                query += " where status = :status"
+            }
+            val statement = handle.createQuery(query)
+            if (status != null) {
+                statement.bind("status", status)
+            }
+            statement.mapTo<Aposta>().toList()
+        }
+    }
 }
