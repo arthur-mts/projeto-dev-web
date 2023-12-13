@@ -19,7 +19,8 @@ class ApostaRepository(private val jdbi: Jdbi) {
     }
     fun listarApostasPorConcurso(idConcurso: UUID): List<Aposta> {
         return jdbi.withHandleUnchecked { handle ->
-            handle.createQuery("select ap.*, apo.nome as nome_apostador from apostas ap join apostadores apo on apo.id = ap.id_apostador where ap.id_concurso = :idConcurso").bind("idConcurso", idConcurso).mapTo<Aposta>().toList()
+            handle.createQuery("select ap.*, apo.nome as nome_apostador, c.nome as nome_concurso from apostas ap join apostadores apo on apo.id = ap.id_apostador join concurso c on c.id = ap.id_concurso " +
+                    "where ap.id_concurso = :idConcurso").bind("idConcurso", idConcurso).mapTo<Aposta>().toList()
         }
     }
 
@@ -40,7 +41,8 @@ class ApostaRepository(private val jdbi: Jdbi) {
 
     fun listarApostasPorApostador(idApostador: UUID): List<Aposta> {
         return jdbi.withHandleUnchecked { handle ->
-            handle.createQuery("select ap.*, apo.nome as nome_apostador from apostas ap join apostadores apo on apo.id = ap.id_apostador where ap.id_apostador = :idApostador").bind("idApostador", idApostador).mapTo<Aposta>().toList()
+            handle.createQuery("select ap.*, apo.nome as nome_apostador, c.nome as nome_concurso from apostas ap join apostadores apo on apo.id = ap.id_apostador join concurso c on c.id = ap.id_concurso " +
+                    "where ap.id_apostador = :idApostador").bind("idApostador", idApostador).mapTo<Aposta>().toList()
         }
     }
 
@@ -60,7 +62,7 @@ class ApostaRepository(private val jdbi: Jdbi) {
 
     fun listarApostas(status: Aposta.Status?): List<Aposta> {
         return jdbi.withHandleUnchecked { handle ->
-            var query = "select * from apostas"
+            var query = "select ap.*, apo.nome as nome_apostador, c.nome as nome_concurso from apostas ap join apostadores apo on apo.id = ap.id_apostador join concurso c on c.id = ap.id_concurso"
 
             if (status != null) {
                 query += " where status = :status"

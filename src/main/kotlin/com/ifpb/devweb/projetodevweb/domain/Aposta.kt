@@ -16,7 +16,9 @@ data class Aposta(
         val numeroApostado: Int,
         val status: Status,
         @ColumnName("nome_apostador")
-        val nomeApostador: String? = null
+        val nomeApostador: String? = null,
+        @ColumnName("nome_concurso")
+        val nomeConcurso: String? = null,
 ) {
     enum class Status {
         EM_ABERTO,
